@@ -51,7 +51,7 @@ const createReservation = async (req, res) => {
   });
 
   await sendEmail(
-    "villanueva0512345@gmail.com",
+    process.env.ADMIN_EMAIL,
     "Hotel Reservation",
     `${customerName} reserved a room. RoomID: ${roomID}`
   );

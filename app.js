@@ -3,6 +3,7 @@ require("express-async-errors");
 
 const express = require("express");
 const app = express();
+
 // routes
 const roomRouter = require("./routes/room");
 const amenityRouter = require("./routes/amenities");
@@ -17,7 +18,7 @@ const connectDB = require("./db/connectDB");
 
 // json
 app.use(express.json());
-// app.use(express.static("./uploads"));
+// app.use(express.static("./public"));
 
 // routers
 app.use("/api/v1/rooms", roomRouter);

@@ -7,10 +7,6 @@ const AmenitiesSchema = new mongoose.Schema({
     required: [true, "Please provide amenity name"],
     unique: true,
   },
-  // price: {
-  //   type: Number,
-  //   required: [true, "Please provide price"],
-  // },
   amenityImages: {
     type: Array,
   },
