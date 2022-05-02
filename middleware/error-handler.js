@@ -1,6 +1,5 @@
 const CustomError = require("../errors");
 const { StatusCodes } = require("http-status-codes");
-const deleteUploadFiles = require("../utils/delete-files");
 
 const errorHandlerMiddleware = async (err, req, res, next) => {
   let customError = {
@@ -14,14 +13,6 @@ const errorHandlerMiddleware = async (err, req, res, next) => {
       .map((item) => item.message)
       .join(",");
     customError.statusCode = StatusCodes.BAD_REQUEST;
-
-    if (req.files) {
-      const imageFiles = req.files.map((files) => {
-        return files.path;
-      });
-
-      imageFiles.map((file) => deleteUploadFiles(file));
-    }
   }
 
   if (err.code && err.code === 11000) {
@@ -29,12 +20,6 @@ const errorHandlerMiddleware = async (err, req, res, next) => {
       err.keyValue
     )} field, please choose another value`;
     customError.statusCode = 400;
-
-    const imageFiles = req.files.map((files) => {
-      return files.path;
-    });
-
-    imageFiles.map((file) => deleteUploadFiles(file));
   }
 
   return res.status(customError.statusCode).json({ msg: customError.msg });

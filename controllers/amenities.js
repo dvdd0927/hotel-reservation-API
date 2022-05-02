@@ -1,7 +1,7 @@
 const Amenities = require("../models/Amenities");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const deleteUploadFiles = require("../utils/delete-files");
+const { uploadMultipleImage } = require("../utils/file-upload");
 
 const getAllAmenities = async (req, res) => {
   const amenityData = await Amenities.find({});
@@ -28,11 +28,12 @@ const createAmenity = async (req, res) => {
     throw new CustomError.BadRequestError("Please upload image");
   }
 
-  const imageFiles = req.files.map((file) => {
-    return file.path;
-  });
+  // upload images
+  const images = await uploadMultipleImage(req.files);
 
-  req.body.amenityImages = imageFiles;
+  // get the image URLs
+  const imageURLs = images.map((image) => image.imageURL);
+  req.body.amenityImages = imageURLs;
 
   const amenityData = await Amenities.create(req.body);
   res.status(StatusCodes.CREATED).json(amenityData);
@@ -46,14 +47,13 @@ const updateAmenity = async (req, res) => {
     throw new CustomError.NotFoundError("No amenity found");
   }
 
-  if (!(req.files == false)) {
-    oldAmenityData.amenityImages.map((data) => deleteUploadFiles(data));
+  if (req.files.length !== 0) {
+    // upload images
+    const images = await uploadMultipleImage(req.files);
 
-    const imageFiles = req.files.map((file) => {
-      return file.path;
-    });
-
-    req.body.amenityImages = imageFiles;
+    // get the image URLs
+    const imageURLs = images.map((image) => image.imageURL);
+    req.body.amenityImages = imageURLs;
   }
 
   const newData = await Amenities.findOneAndUpdate(
@@ -67,15 +67,12 @@ const updateAmenity = async (req, res) => {
 
 const deleteAmenity = async (req, res) => {
   const amenityID = req.params.id;
-  const oldData = await Amenities.findOne({ _id: amenityID });
 
   const deleteData = await Amenities.findOneAndDelete({ _id: amenityID });
 
   if (!deleteData) {
     throw new CustomError.NotFoundError("No amenity found");
   }
-
-  oldData.amenityImages.map((file) => deleteUploadFiles(file));
 
   res.status(StatusCodes.OK).json(deleteData);
 };

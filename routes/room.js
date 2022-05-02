@@ -1,6 +1,8 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
-const uploadPhoto = require("../middleware/file-upload");
+
+const upload = multer();
 
 const {
   getAllRooms,
@@ -13,11 +15,11 @@ const {
 router
   .route("/")
   .get(getAllRooms)
-  .post(uploadPhoto.array("roomImages[]"), createRoom);
+  .post(upload.array("roomImages[]"), createRoom);
 router
   .route("/:id")
   .get(getSingleRoom)
-  .patch(uploadPhoto.array("roomImages[]"), updateRoom)
+  .patch(upload.array("roomImages[]"), updateRoom)
   .delete(deleteRoom);
 
 module.exports = router;

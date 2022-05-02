@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const uploadPhoto = require("../middleware/file-upload");
+const multer = require("multer");
+const upload = multer();
 
 const {
   getAllAmenities,
@@ -12,11 +13,11 @@ const {
 router
   .route("/")
   .get(getAllAmenities)
-  .post(uploadPhoto.array("amenityImages[]"), createAmenity);
+  .post(upload.array("amenityImages[]"), createAmenity);
 router
   .route("/:id")
   .get(getSingleAmenity)
-  .patch(uploadPhoto.array("amenityImages[]"), updateAmenity)
+  .patch(upload.array("amenityImages[]"), updateAmenity)
   .delete(deleteAmenity);
 
 module.exports = router;
