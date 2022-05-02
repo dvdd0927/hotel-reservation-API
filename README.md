@@ -28,13 +28,13 @@ setup enviroment variable for the ff:
 
 #### API
 
-- #### Rooms
+#### Rooms
 - get all room
   - URL/api/v1/rooms
 - get single room
   - URL/api/v1/rooms/:id
 
-- #### Amenities
+#### Amenities
 - get all amenities
   - URL/api/v1/amenities
 - get single amenities
